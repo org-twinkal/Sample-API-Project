@@ -1,0 +1,38 @@
+name: ci-cd-pipeline
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout repo
+              uses: actions/checkout@v3
+            - name: set up node
+              uses: actions/setup-node@v3
+              with:
+                node-version: '22'
+            - name: install dependencies
+              run: npm install
+            - name: run tests
+              run: npm test
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout repo
+              uses: actions/checkout@v3
+            - name: Deploy to server
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                host: ${{ secrets.server_ip }}
+                username: ${{ secrets.server_user}}
+                key: ${{ secrets.server_ssh_key}}
+                script: |
+                  cd /var/www/Sample-API-Project
+                  git pull origin main
+                  npm install
+            
