@@ -23,8 +23,6 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            - name: checkout repo
-              uses: actions/checkout@v3
             - name: Deploy to server
               uses: appleboy/ssh-action@v1.0.3
               with:
@@ -33,7 +31,7 @@ jobs:
                 key: ${{ secrets.server_ssh_key}}
                 script: |
                     echo "Connecting to server and deploying application..."
-                #   cd /var/www/Sample-API-Project
-                #   git pull origin main
+                    cd /var/www/Sample-API-Project
+                    git pull origin main
                 #   npm install
             
