@@ -35,5 +35,5 @@ jobs:
                     cd /var/www/Sample-API-Project
                     sudo git pull origin main
                     sudo npm install
-                    sudo pm2 restart all
+                    pm2 restart all
             
