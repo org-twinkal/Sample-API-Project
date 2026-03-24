@@ -2,7 +2,9 @@ name: ci-cd-pipeline-dev
 on:
     push:
         branches:
-            - main
+            - dev
+            - stage
+            - prod
 
     workflow_dispatch:
 
