@@ -23,20 +23,23 @@ jobs:
             - name: run tests
               run: npm test
 
-    deploy:
+    deploy-dev:
         needs: build
-        environment: deploy
-        runs-on: ubuntu-latest
-        steps:
-            - name: Deploy to server
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                host: ${{ secrets.server_ip }}
-                username: ${{ secrets.server_user}}
-                key: ${{ secrets.server_ssh_key}}
-                script: |
-                    cd /var/www/Sample-API-Project
-                    sudo git pull origin main
-                    sudo npm install
-                    pm2 restart all
-            
+        if: github.ref == 'refs/heads/dev'
+        uses: ./.github/workflows/reusable-workflow-deploy.yml
+        with:
+            environment: dev
+    
+    deploy-stage:
+        needs: build
+        if: github.ref == 'refs/heads/stage'
+        uses: ./.github/workflows/reusable-workflow-deploy.yml
+        with:
+            environment: stage
+
+    deploy-prod:
+        needs: build
+        if: github.ref == 'refs/heads/prod'
+        uses: ./.github/workflows/reusable-workflow-deploy.yml
+        with:
+            environment: prod
